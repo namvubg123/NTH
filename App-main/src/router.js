@@ -8,7 +8,7 @@ import ListOld from './components/old/ListOld';
 import ListPhone from './components/phone/ListPhone';
 import ListLaptop from './components/laptop/ListLaptop';
 import PayForm from './components/pay/PayForm';
-import Cart from './components/cart/Cart';
+// import Cart from './components/cart/Cart';
 import ProductsDetails from './components/productDetails/Products';
 import Account from './components/user/userPage/Account';
 import CustomerSupport from './components/user/userPage/CustomerSupport';
@@ -19,6 +19,10 @@ import DefaultLayoutAdmin from './admin/components/DefaultLayoutAdmin';
 import AdminProducts from './admin/page/Products';
 import AdminUsers from './admin/page/Users';
 import AdminCategory from './admin/page/Category';
+import PrivacyPolicy from './pages/policy/PrivacyPolicy';
+import ReturnPolicy from './pages/policy/ReturnPolicy';
+import ShippingPolicy from './pages/policy/ShippingPolicy';
+import WarrantyPolicy from './pages/policy/WarrantyPolicy';
 
 export const router = createBrowserRouter([
   {
@@ -53,10 +57,10 @@ export const router = createBrowserRouter([
         path: 'laptop',
         element: <ListLaptop />,
       },
-      {
-        path: 'cart',
-        element: <Cart />,
-      },
+      // {
+      //   path: 'cart',
+      //   element: <Cart />,
+      // },
       {
         path: 'account',
         element: <Account />,
@@ -80,6 +84,27 @@ export const router = createBrowserRouter([
       {
         path: ':productId',
         element: <ProductsDetails />,
+      },
+      {
+        path: '/policy',
+        children: [
+          {
+            path: 'privacy',
+            element: <PrivacyPolicy />,
+          },
+          {
+            path: 'return',
+            element: <ReturnPolicy />,
+          },
+          {
+            path: 'shipping',
+            element: <ShippingPolicy />,
+          },
+          {
+            path: 'warranty',
+            element: <WarrantyPolicy />,
+          },
+        ],
       },
     ],
   },
