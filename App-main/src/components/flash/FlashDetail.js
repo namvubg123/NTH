@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
-import 'slick-carousel/slick/slick-theme.css';
+// import data from "../phone/DataPhone";
 import 'slick-carousel/slick/slick.css';
-import { getProducts } from '../api/products';
-import Meta from 'antd/es/card/Meta';
-import { Badge, Button, Card, InputNumber, Rate, message } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import 'slick-carousel/slick/slick-theme.css';
+import { Link, useNavigate } from 'react-router-dom';
+// import Products from "./../products/Products";
 import { addItemToCart, getCart } from '../api/cart';
+import { getProducts } from '../api/products';
+import { Button, message } from 'antd';
 
 const SampleNextArrow = (props) => {
   const { onClick } = props;
@@ -37,11 +37,9 @@ function FlashDetail(props) {
     speed: 500,
     slidesToShow: 5,
     slidesToScroll: 1,
-
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
-
   const [products, setProducts] = useState([]);
   const Navigate = useNavigate();
   const [cartItems, setCartItems] = useState(getCart());
@@ -63,69 +61,41 @@ function FlashDetail(props) {
   }, []);
 
   return (
-    <div className="relative ">
+    <div className="relative">
       <Slider {...settings}>
         {products.map((products) => {
           return (
-            <div key={products.id}>
-              <Badge.Ribbon text={`Giảm ${products.offer} % `} color="red">
-                <Card
-                  actions={[<AddToCartButton item={products} quantity={quantity} handleAddToCart={handleAddToCart} />]}
-                  hoverable
-                  style={{
-                    width: 215,
-                    border: '1px solid #ccc',
+            <div key={products.id} className=" ml-2">
+              <div className="p-[10px] h-[380px] border-2 border-[#ddd] rounded w-[215px]">
+                <div
+                  onClick={() => {
+                    Navigate(`/${products._id}`);
                   }}
                 >
-                  <div
-                    onClick={() => {
-                      Navigate(`/${products._id}`);
-                    }}
-                  >
-                    <img alt="example" src={products.productIMG} />
-                    <div>
-                      <Meta
-                        className="font-bold"
-                        title={products.name}
-                        description={`${products.salePrice.toLocaleString('vi-VN', {
-                          currency: 'VND',
-                        })} VND`}
-                      />
-                      <Meta
-                        className="line-through font-bold"
-                        description={`Giá gốc: ${products.price.toLocaleString('vi-VN', {
-                          currency: 'VND',
-                        })} VND`}
-                      />
-                      <Rate
-                        disabled
-                        allowHalf
-                        defaultValue={2.5}
-                        style={{
-                          fontSize: '16px',
-                        }}
-                      />
-                      <InputNumber
-                        min={1}
-                        max={10}
-                        defaultValue={1}
-                        onChange={(value) => {
-                          setQuantity(value);
-                        }}
-                      />
-                    </div>
-                  </div>
-                  <button
-                    icon={<ShoppingCartOutlined />}
-                    className="text-center bg-red-600 w-full mt-8 h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105"
-                    onClick={() => {
-                      handleAddToCart(products._id, quantity);
-                    }}
-                  >
-                    Thêm vào giỏ hàng
-                  </button>
-                </Card>
-              </Badge.Ribbon>
+                  <p className="bg-red-600 w-[65px] h-[25px] text-[12px] font-semibold rounded-full text-center pt-1 text-white">
+                    Giảm {products.offer}%
+                  </p>
+                  <img src={products.productIMG} alt="" className="w-[180px] h-[180px] m-2" />
+                  <p className="text-[15px] font-semibold h-[50px] text-[#444]">{products.name}</p>
+                  <p className="text-red-600 font-semibold mb-1">
+                    {` ${products.price.toLocaleString('vi-VN', {
+                      currency: 'VND',
+                    })} VND`}
+                  </p>
+                </div>
+                <div className="mt-[20px]">
+                  <Link to="/payment">
+                    <p
+                      className="text-center bg-red-600 w-full h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105"
+                      onClick={() => {
+                        handleAddToCart(products._id, quantity);
+                      }}
+                    >
+                      Mua ngay
+                    </p>
+                  </Link>
+                </div>
+              </div>
             </div>
           );
         })}

@@ -4,7 +4,7 @@ import { getProducts } from '../api/products';
 import { Badge, Card, Rate } from 'antd';
 import Meta from 'antd/es/card/Meta';
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function ListPhone() {
   // const [active, setActive] = useState(false)
@@ -59,59 +59,40 @@ function ListPhone() {
           </div>
         </div>
       </div>
-      <div className="max-w-[1150px] mx-auto">
-        <div className="flex justify-between flex-wrap gap-y-8">
-          {products.map((products) => {
-            return (
-              <div key={products.id}>
-                <Badge.Ribbon text={`Giảm ${products.offer} % `} color="red">
-                  <Card
-                    hoverable
-                    style={{
-                      width: 215,
-                      border: '1px solid #ccc',
-                    }}
-                  >
-                    <div
-                      onClick={() => {
-                        Navigate(`/${products._id}`);
-                      }}
-                    >
-                      <img alt="example" src={products.productIMG} />
-                      <Meta
-                        className="font-bold"
-                        title={products.name}
-                        description={`${products.salePrice.toLocaleString('vi-VN', {
-                          currency: 'VND',
-                        })} VND`}
-                      />
-                      <Meta
-                        className="line-through font-bold"
-                        description={`Giá gốc: ${products.price.toLocaleString('vi-VN', {
-                          currency: 'VND',
-                        })} VND`}
-                      />
-                      <Rate
-                        disabled
-                        allowHalf
-                        defaultValue={2.5}
-                        style={{
-                          fontSize: '16px',
-                        }}
-                      />
-                    </div>
-                    <button
-                      icon={<ShoppingCartOutlined />}
-                      className="text-center bg-red-600 w-full mt-8 h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105"
-                    >
-                      Thêm vào giỏ hàng
-                    </button>
-                  </Card>
-                </Badge.Ribbon>
+      <div className="w-3/4 mx-auto grid grid-cols-5 gap-4">
+        {products.map((products) => {
+          return (
+            <div key={products.id} className="">
+              <div className="p-[10px] h-[380px] border-2 border-[#ddd] rounded w-[215px]">
+                <div
+                  onClick={() => {
+                    Navigate(`/${products._id}`);
+                  }}
+                >
+                  <p className="bg-red-600 w-[65px] h-[25px] text-[12px] font-semibold rounded-full text-center pt-1 text-white">
+                    Giảm {products.offer}%
+                  </p>
+                  <Link to="/products">
+                    <img src={products.productIMG} alt="" className="w-[180px] h-[180px] m-2" />
+                  </Link>
+                  <p className="text-[15px] font-semibold h-[50px] text-[#444]">{products.name}</p>
+                  <p className="text-red-600 font-semibold mb-1">
+                    {` ${products.price.toLocaleString('vi-VN', {
+                      currency: 'VND',
+                    })} VND`}{' '}
+                  </p>
+                </div>
+                <div className="mt-[20px]">
+                  <Link to="/payment">
+                    <p className="text-center bg-red-600 w-full h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105">
+                      Mua ngay
+                    </p>
+                  </Link>
+                </div>
               </div>
-            );
-          })}
-        </div>
+            </div>
+          );
+        })}
       </div>
     </>
   );

@@ -1,3 +1,6 @@
+import { HomeFilled, ShoppingCartOutlined } from '@ant-design/icons';
+import { Badge, Button, Checkbox, Drawer, Form, Input, InputNumber, Menu, message, Table, Typography } from 'antd';
+
 import { faFacebook, faGoogle, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
   faBox,
@@ -11,10 +14,11 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/img/logo.jpg';
 import styles from './Header.module.scss';
 import Cookies from 'js-cookie';
+import { getCart } from '../../api/cart';
 
 const cx = classNames.bind(styles);
 function Header() {
@@ -23,13 +27,13 @@ function Header() {
   const UserName = sessionStorage.getItem('User');
   const SetUserName = JSON.parse(UserName);
 
-  const handleScroll = () => {
-    if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) {
-      setScrollstyle('scrollstyle');
-    } else {
-      setScrollstyle('');
-    }
-  };
+  // const handleScroll = () => {
+  //   if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) {
+  //     setScrollstyle('scrollstyle');
+  //   } else {
+  //     setScrollstyle('');
+  //   }
+  // };
 
   useEffect(() => {
     const token = Cookies.get('token');
@@ -38,10 +42,10 @@ function Header() {
     } else {
       setIsLoggedIn(false);
     }
-    window.onscroll = handleScroll;
-    return () => {
-      window.onscroll = null;
-    };
+    // window.onscroll = handleScroll;
+    // return () => {
+    //   window.onscroll = null;
+    // };
   }, [isLoggedIn]);
 
   const classes = cx('wrapper', { scrollstyle });
@@ -90,12 +94,7 @@ function Header() {
                 </i>
                 <p className={cx('title')}>Hàng cũ</p>
               </Link>
-              <Link to="/cart" className={cx('menu')}>
-                <i className={cx('phone')}>
-                  <FontAwesomeIcon icon={faCartShopping} />
-                </i>
-                <p className={cx('title')}>Giỏ hàng</p>
-              </Link>
+              <AppCart />
               <Link to={isLoggedIn ? '/user' : '/login'} className={cx('menu')}>
                 <i className={cx('phone')}>
                   <FontAwesomeIcon icon={faUser} />
@@ -117,6 +116,165 @@ function Header() {
           </div>
         </div>
       </div>
+    </div>
+  );
+}
+
+function AppCart() {
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
+  const [checkoutDrawerOpen, setCheckoutDrawerOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  useEffect(() => {
+    const token = Cookies.get('token');
+    getCart(token).then((res) => {
+      console.log(res);
+      setCartItems(res.data.data.items);
+    });
+  }, []);
+  const onConfirmOrder = (values) => {
+    console.log({ values });
+    setCartDrawerOpen(false);
+    setCheckoutDrawerOpen(false);
+    message.success('Your order has been placed successfully.');
+  };
+
+  return (
+    <div>
+      <Badge
+        onClick={() => {
+          setCartDrawerOpen(true);
+        }}
+        className={cx('soppingCartIcon')}
+      >
+        <FontAwesomeIcon className={cx('icon-Cart')} icon={faCartShopping} />
+        <p className={cx('title')}>Giỏ hàng</p>
+      </Badge>
+      <Drawer
+        open={cartDrawerOpen}
+        onClose={() => {
+          setCartDrawerOpen(false);
+        }}
+        title="Giỏ hàng của bạn"
+        contentWrapperStyle={{ width: 500 }}
+      >
+        <Table
+          pagination={false}
+          columns={[
+            {
+              title: 'Tên sản phẩm',
+              dataIndex: 'productId.name',
+            },
+            {
+              title: 'Giá',
+              dataIndex: 'price',
+              render: (value) => {
+                return (
+                  <span>
+                    {`${value.toLocaleString('vi-VN', {
+                      currency: 'VND',
+                    })}`}
+                    đ
+                  </span>
+                );
+              },
+            },
+            {
+              title: 'Số lượng',
+              dataIndex: 'quantity',
+            },
+            {
+              title: 'Tổng',
+              dataIndex: 'subTotal',
+            },
+          ]}
+          dataSource={cartItems.map((item) => ({
+            key: item._id,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            total: item.total,
+          }))}
+          summary={(data) => {
+            const total = data.reduce((pre, current) => {
+              return pre + current.total;
+            }, 0);
+            return (
+              <span>
+                Tổng thiệt hại:{'  '}
+                {`${total.toLocaleString('vi-VN', {
+                  currency: 'VND',
+                })}`}
+                đ
+              </span>
+            );
+          }}
+        />
+        <Button
+          onClick={() => {
+            setCheckoutDrawerOpen(true);
+          }}
+          type="primary"
+        >
+          Checkout Your Cart
+        </Button>
+      </Drawer>
+      <Drawer
+        open={checkoutDrawerOpen}
+        onClose={() => {
+          setCheckoutDrawerOpen(false);
+        }}
+        title="Confirm Order"
+      >
+        <Form onFinish={onConfirmOrder}>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: 'Please enter your full name',
+              },
+            ]}
+            label="Full Name"
+            name="full_name"
+          >
+            <Input placeholder="Enter your full name.." />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                type: 'email',
+                message: 'Please enter a valid email',
+              },
+            ]}
+            label="Email"
+            name="your_name"
+          >
+            <Input placeholder="Enter your email.." />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: 'Please enter your address',
+              },
+            ]}
+            label="Address"
+            name="your_address"
+          >
+            <Input placeholder="Enter your full address.." />
+          </Form.Item>
+          <Form.Item>
+            <Checkbox defaultChecked disabled>
+              Cash on Delivery
+            </Checkbox>
+          </Form.Item>
+          <Typography.Paragraph type="secondary">More methods coming soon</Typography.Paragraph>
+          <Button type="primary" htmlType="submit">
+            {' '}
+            Confirm Order
+          </Button>
+        </Form>
+      </Drawer>
     </div>
   );
 }

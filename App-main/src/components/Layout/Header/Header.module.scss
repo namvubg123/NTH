@@ -1,6 +1,7 @@
 .wrapper {
+    position: sticky;
     top: 0;
-    z-index: 1000000;
+    z-index: 1;
     width: 100%;
     .cps-container{
         width: 100%;
@@ -105,7 +106,29 @@
         position: fixed;
         animation: FadeInNav linear 0.7s;
     }
+    
 }
+.soppingCartIcon{
+    display: flex;
+    align-items: center;
+    padding: 5px 20px 0px 6px;
+    .icon-Cart{
+        font-size: 20px;
+        color: #fff;
+        display: inline;
+        line-height: 18px;
+        margin: 0px 5px 0px 0px;
+    }
+    .title{
+        color: #ffffff;
+        font-family: sans-serif;
+        font-size: 12px;
+        line-height: 18px;
+        font-weight: 500;
+        }
+    
+}
+
 
 @keyframes FadeInNav {
     from {

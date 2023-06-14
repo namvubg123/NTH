@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { getProducts } from '../api/products';
+import React, { useEffect, useState } from 'react';
 import Slider from 'react-slick';
-// import Heart from "react-heart";
+// import data from "../phone/DataPhone";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { ShoppingCartOutlined } from '@ant-design/icons';
-import { Badge, Card, Rate } from 'antd';
-import Meta from 'antd/es/card/Meta';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+// import Products from "./../products/Products";
+import { addItemToCart, getCart } from '../api/cart';
+import { getProducts } from '../api/products';
+import { Button, message } from 'antd';
 
 const SampleNextArrow = (props) => {
   const { onClick } = props;
@@ -23,7 +23,7 @@ const SamplePrevArrow = (props) => {
   const { onClick } = props;
   return (
     <div className="bg-white absolute right-full top-[45%]" onClick={onClick}>
-      <button className=" text-red-300 text-[30px] pt-[2px]">
+      <button className=" text-red-300 text-[30px] pt-[2px]" onClick={onClick}>
         <i className="fa-solid fa-chevron-left"></i>
       </button>
     </div>
@@ -40,10 +40,15 @@ function OldDetail() {
     nextArrow: <SampleNextArrow />,
     prevArrow: <SamplePrevArrow />,
   };
-
-  // const [active, setActive] = useState(false)
   const [products, setProducts] = useState([]);
   const Navigate = useNavigate();
+  const [cartItems, setCartItems] = useState(getCart());
+  const [quantity, setQuantity] = useState(1);
+
+  const handleAddToCart = (productId) => {
+    addItemToCart(productId, quantity);
+    setCartItems(getCart());
+  };
 
   useEffect(() => {
     getProducts()
@@ -54,61 +59,60 @@ function OldDetail() {
         console.log(error);
       });
   }, []);
+
   return (
     <div className="relative">
       <Slider {...settings}>
         {products.map((products) => {
           return (
-            <div key={products.id}>
-              <Badge.Ribbon text={`Giảm ${products.offer} % `} color="red">
-                <Card
-                  hoverable
-                  style={{
-                    width: 215,
-                    border: '1px solid #ccc',
+            <div key={products.id} className=" ml-2">
+              <div className="p-[10px] h-[380px] border-2 border-[#ddd] rounded w-[215px]">
+                <div
+                  onClick={() => {
+                    Navigate(`/${products._id}`);
                   }}
                 >
-                  <div
-                    onClick={() => {
-                      Navigate(`/${products._id}`);
-                    }}
-                  >
-                    <img alt="example" src={products.productIMG} />
-                    <Meta
-                      className="font-bold"
-                      title={products.name}
-                      description={`${products.salePrice.toLocaleString('vi-VN', {
-                        currency: 'VND',
-                      })} VND`}
-                    />
-                    <Meta
-                      className="line-through font-bold"
-                      description={`Giá gốc: ${products.price.toLocaleString('vi-VN', {
-                        currency: 'VND',
-                      })} VND`}
-                    />
-                    <Rate
-                      disabled
-                      allowHalf
-                      defaultValue={2.5}
-                      style={{
-                        fontSize: '16px',
+                  <p className="bg-red-600 w-[65px] h-[25px] text-[12px] font-semibold rounded-full text-center pt-1 text-white">
+                    Giảm {products.offer}%
+                  </p>
+                  <img src={products.productIMG} alt="" className="w-[180px] h-[180px] m-2" />
+                  <p className="text-[15px] font-semibold h-[50px] text-[#444]">{products.name}</p>
+                  <p className="text-red-600 font-semibold mb-1">
+                    {` ${products.price.toLocaleString('vi-VN', {
+                      currency: 'VND',
+                    })} VND`}
+                  </p>
+                </div>
+                <div className="mt-[20px]">
+                  <Link to="/payment">
+                    <p
+                      className="text-center bg-red-600 w-full h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105"
+                      onClick={() => {
+                        handleAddToCart(products._id, quantity);
                       }}
-                    />
-                  </div>
-                  <button
-                    icon={<ShoppingCartOutlined />}
-                    className="text-center bg-red-600 w-full mt-8 h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105"
-                  >
-                    Thêm vào giỏ hàng
-                  </button>
-                </Card>
-              </Badge.Ribbon>
+                    >
+                      Mua ngay
+                    </p>
+                  </Link>
+                </div>
+              </div>
             </div>
           );
         })}
       </Slider>
     </div>
+  );
+}
+function AddToCartButton({ item, quantity, handleAddToCart }) {
+  const addToCart = () => {
+    handleAddToCart(item._id, quantity).then((res) => {
+      message.success(`${item.name} added`);
+    });
+  };
+  return (
+    <Button type="link" onClick={addToCart}>
+      Thêm vào giỏ hàng
+    </Button>
   );
 }
 
