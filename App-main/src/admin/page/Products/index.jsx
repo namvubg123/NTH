@@ -22,7 +22,7 @@ function AdminProducts(props) {
   useEffect(() => {
     getProducts()
       .then((response) => {
-        console.log(response);
+        // console.log(response);
         setDataSource(response.data.data);
       })
       .catch((error) => {

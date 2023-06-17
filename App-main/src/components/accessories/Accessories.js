@@ -7,7 +7,7 @@ function Accessories() {
       <div className="flex">
         <div className="mt-[12px] mr-[10px] text-[20px] text-red-600">
           <i className="fa-solid fa-headphones-simple"></i>
-          <span>Phụ kiện</span>
+          <span className="ml-[10px]">Phụ kiện</span>
         </div>
       </div>
       <AccessoriesDetail />

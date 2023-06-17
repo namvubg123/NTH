@@ -7,7 +7,7 @@ function Old() {
       <div className="flex">
         <div className="mr-[10px] text-[20px] text-red-600">
           <i className="fa-solid fa-box"></i>
-          <span>Hàng cũ</span>
+          <span className="ml-[10px]">Hàng cũ</span>
         </div>
       </div>
       <OldDetail />

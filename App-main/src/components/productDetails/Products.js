@@ -23,7 +23,7 @@ function ProductsDetails() {
   // }
 
   return (
-    <div className="w-3/4 mx-auto my-[50px] h-[100vh]">
+    <div className="w-3/4 mx-auto mt-[50px] h-[120vh]">
       <h2 className="text-[22px] mb-6 font-semibold">{product.name}</h2>
       <div className="grid grid-cols-[650px_minmax(100px,_1fr)] gap-10">
         <div className="border-[2px] border-gray-100 rounded-3xl w-full h-[395px]">

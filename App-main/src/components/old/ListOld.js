@@ -30,7 +30,7 @@ function ListOld() {
   };
 
   return (
-    <>
+    <div className="mb-[10vh]">
       <div>
         <div className="w-3/4 mx-auto flex my-[20px]">
           <div
@@ -93,7 +93,7 @@ function ListOld() {
           );
         })}
       </div>
-    </>
+    </div>
   );
 }
 

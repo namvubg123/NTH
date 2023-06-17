@@ -7,7 +7,7 @@ function Laptop() {
       <div className="flex">
         <div className="mt-[12px] mr-[10px] text-[20px] text-red-600">
           <i className="fa-solid fa-laptop"></i>
-          <span>Laptop</span>
+          <span className="ml-[10px]">Laptop</span>
         </div>
       </div>
       <LaptopDetail />

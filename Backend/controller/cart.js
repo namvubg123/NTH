@@ -25,7 +25,9 @@ exports.addItemToCart = async (req, res) => {
         if (cart.items.length == 0) {
           cart.subTotal = 0;
         } else {
-          cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
+          cart.subTotal = cart.items
+            .map((item) => item.total)
+            .reduce((acc, next) => acc + next);
         }
       }
       //----------Check if product exist, just add the previous quantity with the new quantity and update the total price-------
@@ -35,17 +37,22 @@ exports.addItemToCart = async (req, res) => {
         cart.items[indexFound].total =
           cart.items[indexFound].quantity * productDetails.price;
         cart.items[indexFound].price = productDetails.price;
-        cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
+        cart.subTotal = cart.items
+          .map((item) => item.total)
+          .reduce((acc, next) => acc + next);
       }
       //----Check if quantity is greater than 0 then add item to items array ----
       else if (quantity > 0) {
         cart.items.push({
           productId: productId,
+          productName: productDetails.name,
           quantity: quantity,
           price: productDetails.price,
           total: parseInt(productDetails.price * quantity),
         });
-        cart.subTotal = cart.items.map(item => item.total).reduce((acc, next) => acc + next);
+        cart.subTotal = cart.items
+          .map((item) => item.total)
+          .reduce((acc, next) => acc + next);
       }
       //----If quantity of price is 0 throw the error -------
       else {
@@ -67,12 +74,13 @@ exports.addItemToCart = async (req, res) => {
         items: [
           {
             productId: productId,
+            productName: productDetails.name,
             quantity: quantity,
             total: parseInt(productDetails.price * quantity),
             price: productDetails.price,
           },
         ],
-        subTotal: parseInt(productDetails.price * quantity)
+        subTotal: parseInt(productDetails.price * quantity),
       };
       cart = await cartRepository.addItem(cartData);
       // let data = await cart.save();
@@ -114,7 +122,7 @@ exports.emptyCart = async (req, res) => {
   try {
     let cart = await cartRepository.cart();
     cart.items = [];
-    cart.subTotal = 0
+    cart.subTotal = 0;
     let data = await cart.save();
     res.status(200).json({
       type: "success",
@@ -130,5 +138,3 @@ exports.emptyCart = async (req, res) => {
     });
   }
 };
-
-

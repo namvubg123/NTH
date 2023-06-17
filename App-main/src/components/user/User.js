@@ -40,7 +40,7 @@ function User() {
     speed: 400,
   };
   return (
-    <div className="w-3/4 mx-auto grid grid-cols-3 gap-6 mt-[50px] h-[37vh]">
+    <div className="w-3/4 mx-auto grid grid-cols-3 gap-6 my-[50px] h-[37vh]">
       <UserCommon />
       <div>
         <div className="text-[60px] mt-[30px] text-red-600 w-5/12 mx-auto">

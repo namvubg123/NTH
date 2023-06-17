@@ -1,5 +1,4 @@
-import { HomeFilled, ShoppingCartOutlined } from '@ant-design/icons';
-import { Badge, Button, Checkbox, Drawer, Form, Input, InputNumber, Menu, message, Table, Typography } from 'antd';
+import { Badge, Button, Checkbox, Drawer, Form, Input, message, Table, Typography } from 'antd';
 
 import { faFacebook, faGoogle, faTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
@@ -126,10 +125,12 @@ function AppCart() {
   const [cartItems, setCartItems] = useState([]);
   useEffect(() => {
     const token = Cookies.get('token');
-    getCart(token).then((res) => {
-      console.log(res);
-      setCartItems(res.data.data.items);
-    });
+    if (token) {
+      getCart(token).then((res) => {
+        console.log(res);
+        setCartItems(res.data.data.items);
+      });
+    }
   }, []);
   const onConfirmOrder = (values) => {
     console.log({ values });
@@ -159,10 +160,12 @@ function AppCart() {
       >
         <Table
           pagination={false}
+          rowKey="id"
+          dataSource={cartItems}
           columns={[
             {
               title: 'Tên sản phẩm',
-              dataIndex: 'productId.name',
+              dataIndex: 'productName',
             },
             {
               title: 'Giá',
@@ -184,16 +187,19 @@ function AppCart() {
             },
             {
               title: 'Tổng',
-              dataIndex: 'subTotal',
+              dataIndex: 'total',
+              render: (value) => {
+                return (
+                  <span>
+                    {`${value.toLocaleString('vi-VN', {
+                      currency: 'VND',
+                    })}`}
+                    đ
+                  </span>
+                );
+              },
             },
           ]}
-          dataSource={cartItems.map((item) => ({
-            key: item._id,
-            name: item.name,
-            quantity: item.quantity,
-            price: item.price,
-            total: item.total,
-          }))}
           summary={(data) => {
             const total = data.reduce((pre, current) => {
               return pre + current.total;
@@ -215,7 +221,7 @@ function AppCart() {
           }}
           type="primary"
         >
-          Checkout Your Cart
+          Thanh toán
         </Button>
       </Drawer>
       <Drawer
