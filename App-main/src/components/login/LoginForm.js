@@ -25,11 +25,13 @@ function LoginForm(props) {
 
         if (res.data.isAdmin === true) {
           notification.success({ message: 'Đăng nhập thành công' });
+
           navigate(`/admin`);
         } else {
           sessionStorage.setItem('User', JSON.stringify(res.data));
           notification.success({ message: 'Đăng nhập thành công' });
           navigate(`/`);
+          localStorage.setItem('cartItems', JSON.stringify([]));
           window.location.reload();
         }
       }

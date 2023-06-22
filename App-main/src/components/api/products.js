@@ -17,5 +17,5 @@ export const updateProduct = (productId) => {
 };
 
 export const removeProduct = (id) => {
-  return axios.delete(`/product/getById/${id}`);
+  return axios.delete(`/product/removeProduct/${id}`);
 };

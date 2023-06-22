@@ -6,12 +6,12 @@ import {
   SolutionOutlined,
   UserAddOutlined,
 } from '@ant-design/icons';
-import { Button, Input, Popconfirm, Popover, Space, Table, Tooltip } from 'antd';
+import { Button, Input, Popconfirm, Popover, Space, Table, Tooltip, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import ModalProduct from './components/ModalProduct';
 import FormFilter from './components/FormFilter';
-import { getProducts } from '../../../components/api/products';
+import { getProducts, removeProduct } from '../../../components/api/products';
 
 function AdminProducts(props) {
   const [openForm, setOpenForm] = useState(false);
@@ -112,7 +112,23 @@ function AdminProducts(props) {
       ),
     },
   ];
-  const handleConfirmDeleteProduct = (id) => {};
+  const handleConfirmDeleteProduct = (id) => {
+    console.log('id cua san pham la : ' + id);
+    removeProduct(id).then((res) => {
+      console.log(res.data);
+      if (res.data.status === true) {
+        getProducts()
+          .then((response) => {
+            // console.log(response);
+            setDataSource(response.data.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        notification.success({ message: ' Xoa thanh cong san pham ' });
+      }
+    });
+  };
   return (
     <div>
       <div className="flex justify-between items-center mb-3 relative ">

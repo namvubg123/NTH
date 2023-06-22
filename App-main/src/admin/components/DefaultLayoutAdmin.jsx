@@ -1,6 +1,5 @@
 import { BellOutlined, PoweroffOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Button, Layout, Menu, Space, Tooltip, Typography } from 'antd';
-import Cookies from 'js-cookie';
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -83,14 +82,13 @@ function DefaultLayoutAdmin() {
                   shape="circle"
                   icon={<PoweroffOutlined className="text-[15px]" />}
                   onClick={() => {
-                    navigate('/');
-                    Cookies.remove('jwt');
+                    navigate('/user');
                   }}
                 ></Button>
               </Tooltip>
             </Space>
           </Header>
-          <Content className="mt-2 p-6 pb-0 h-[280px] bg-slate-200 rounded-md overflow-y-auto">
+          <Content className="mt-2 p-6 pb-0 h-[280px] bg-slate-200 rounded-md overflow-y-auto ">
             <Outlet />
           </Content>
         </Layout>

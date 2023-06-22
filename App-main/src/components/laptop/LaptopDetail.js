@@ -5,9 +5,9 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link, useNavigate } from 'react-router-dom';
 // import Products from "./../products/Products";
-import { addItemToCart, getCart } from '../api/cart';
+
 import { getProducts } from '../api/products';
-import { Button, message } from 'antd';
+import { message, notification } from 'antd';
 
 const SampleNextArrow = (props) => {
   const { onClick } = props;
@@ -42,12 +42,33 @@ function LaptopDetail(props) {
   };
   const [products, setProducts] = useState([]);
   const Navigate = useNavigate();
-  const [cartItems, setCartItems] = useState(getCart());
-  const [quantity, setQuantity] = useState(1);
 
   const handleAddToCart = (productId) => {
-    addItemToCart(productId, quantity);
-    setCartItems(getCart());
+    const obj = {
+      productId: productId,
+      quantity: 1,
+    };
+    let itemReqList = localStorage.getItem('cartItems');
+    if (itemReqList) {
+      const arr = JSON.parse(itemReqList);
+      console.log(arr);
+      const existingItem = arr.find((item) => item.productId === obj.productId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        arr.push(obj);
+        notification.success({ message: arr });
+      }
+      localStorage.setItem('cartItems', JSON.stringify(arr));
+
+      message.success('Thêm vào giỏ hàng thành công!');
+    } else {
+      localStorage.setItem('cartItems', JSON.stringify([obj]));
+
+      message.success('Thêm vào giỏ hàng thành công!');
+    }
+    window.location.reload();
   };
 
   useEffect(() => {
@@ -84,14 +105,14 @@ function LaptopDetail(props) {
                   </p>
                 </div>
                 <div className="mt-[20px]">
-                  <Link to="/payment">
+                  <Link>
                     <p
                       className="text-center bg-red-600 w-full h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105"
                       onClick={() => {
-                        handleAddToCart(products._id, quantity);
+                        handleAddToCart(products._id);
                       }}
                     >
-                      Mua ngay
+                      Thêm vào giỏ hàng
                     </p>
                   </Link>
                 </div>
@@ -101,18 +122,6 @@ function LaptopDetail(props) {
         })}
       </Slider>
     </div>
-  );
-}
-function AddToCartButton({ item, quantity, handleAddToCart }) {
-  const addToCart = () => {
-    handleAddToCart(item._id, quantity).then((res) => {
-      message.success(`${item.name} added`);
-    });
-  };
-  return (
-    <Button type="link" onClick={addToCart}>
-      Thêm vào giỏ hàng
-    </Button>
   );
 }
 

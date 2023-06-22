@@ -57,10 +57,7 @@ export const router = createBrowserRouter([
         path: 'laptop',
         element: <ListLaptop />,
       },
-      // {
-      //   path: 'cart',
-      //   element: <Cart />,
-      // },
+
       {
         path: 'account',
         element: <Account />,

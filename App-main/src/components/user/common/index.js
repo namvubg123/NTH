@@ -11,6 +11,7 @@ function UserCommon() {
     Cookies.remove('token');
     setUser(null);
     sessionStorage.removeItem('User');
+    localStorage.removeItem('cartItems');
   };
 
   return (

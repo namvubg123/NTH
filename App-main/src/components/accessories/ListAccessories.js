@@ -4,10 +4,39 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { getProducts } from './../api/products';
+import { message, notification } from 'antd';
 
 function ListAccessories() {
   const [products, setProducts] = useState([]);
   const Navigate = useNavigate();
+
+  const handleAddToCart = (productId) => {
+    const obj = {
+      productId: productId,
+      quantity: 1,
+    };
+    let itemReqList = localStorage.getItem('cartItems');
+    if (itemReqList) {
+      const arr = JSON.parse(itemReqList);
+      console.log(arr);
+      const existingItem = arr.find((item) => item.productId === obj.productId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        arr.push(obj);
+        notification.success({ message: arr });
+      }
+      localStorage.setItem('cartItems', JSON.stringify(arr));
+
+      message.success('Thêm vào giỏ hàng thành công!');
+    } else {
+      localStorage.setItem('cartItems', JSON.stringify([obj]));
+
+      message.success('Thêm vào giỏ hàng thành công!');
+    }
+    window.location.reload();
+  };
 
   useEffect(() => {
     getProducts()
@@ -53,9 +82,14 @@ function ListAccessories() {
                   </p>
                 </div>
                 <div className="mt-[20px]">
-                  <Link to="/payment">
-                    <p className="text-center bg-red-600 w-full h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105">
-                      Mua ngay
+                  <Link>
+                    <p
+                      className="text-center bg-red-600 w-full h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105"
+                      onClick={() => {
+                        handleAddToCart(products._id);
+                      }}
+                    >
+                      Thêm vào giỏ hàng
                     </p>
                   </Link>
                 </div>

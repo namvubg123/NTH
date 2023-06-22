@@ -13,41 +13,49 @@ import {
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import classNames from 'classnames/bind';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import logo from '../../../assets/img/logo.jpg';
 import styles from './Header.module.scss';
 import Cookies from 'js-cookie';
-import { getCart } from '../../api/cart';
+import { getProductById, getProducts } from '../../api/products';
 
 const cx = classNames.bind(styles);
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [scrollstyle, setScrollstyle] = useState('');
   const UserName = sessionStorage.getItem('User');
   const SetUserName = JSON.parse(UserName);
+  const [products, setProducts] = useState([]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [showProducts, setShowProducts] = useState(false);
 
-  // const handleScroll = () => {
-  //   if (document.body.scrollTop > 150 || document.documentElement.scrollTop > 150) {
-  //     setScrollstyle('scrollstyle');
-  //   } else {
-  //     setScrollstyle('');
-  //   }
-  // };
+  const handleSearchChange = (event) => {
+    const searchTerm = event.target.value;
+    // Filter the products based on the search term
+    const filteredProducts = products.filter((product) =>
+      product.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setSearchResults(filteredProducts);
+    // Show the product list if the search term is not empty
+    setShowProducts(searchTerm !== '');
+  };
 
   useEffect(() => {
+    getProducts()
+      .then((response) => {
+        setProducts(response.data.data);
+      })
+      .catch((error) => {
+        console.error('Error getting products:', error);
+      });
     const token = Cookies.get('token');
     if (token) {
       setIsLoggedIn(true);
     } else {
       setIsLoggedIn(false);
     }
-    // window.onscroll = handleScroll;
-    // return () => {
-    //   window.onscroll = null;
-    // };
   }, [isLoggedIn]);
 
-  const classes = cx('wrapper', { scrollstyle });
+  const classes = cx('wrapper');
 
   return (
     <div className={classes}>
@@ -63,11 +71,21 @@ function Header() {
           </div>
           <div className={cx('nav')}>
             <div className={cx('search')}>
-              <input type="text" placeholder="Search" className={cx('input-search')} />
+              <input type="text" placeholder="Search" className={cx('input-search')} onChange={handleSearchChange} />
               <button className={cx('btn-search')}>
                 <FontAwesomeIcon className={cx('icon-search')} icon={faSearch} />
               </button>
+              {showProducts && (
+                <div className={cx('products')}>
+                  <ul>
+                    {searchResults.slice(0, 4).map((product) => (
+                      <li key={product.id}>{product.name}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
             </div>
+
             <div className={cx('nav-menu')}>
               <Link to="/phone" className={cx('menu')}>
                 <i className={cx('phone')}>
@@ -123,20 +141,43 @@ function AppCart() {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   const [checkoutDrawerOpen, setCheckoutDrawerOpen] = useState(false);
   const [cartItems, setCartItems] = useState([]);
+
   useEffect(() => {
-    const token = Cookies.get('token');
-    if (token) {
-      getCart(token).then((res) => {
-        console.log(res);
-        setCartItems(res.data.data.items);
-      });
-    }
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+    const productIds = cartItems.map((item) => item.productId);
+    const fetchProductData = async () => {
+      let cartItemsWithProductData = [];
+      for (const productId of productIds) {
+        const response = await getProductById(productId);
+        const cartItem = cartItems.find((item) => item.productId === productId);
+        const total = cartItem.quantity * response.data.data.price;
+        cartItemsWithProductData.push({
+          ...cartItem,
+          productName: response.data.data.name,
+          price: response.data.data.price,
+          total: total,
+        });
+      }
+      setCartItems(cartItemsWithProductData);
+    };
+    fetchProductData();
   }, []);
+  // const productNumber = cartItems.reduce((total, item) => total + item.quantity, 0);
+  const productNumber = cartItems.length;
+
+  const handleDeleteCartItem = (productId) => {
+    const updatedCartItems = cartItems.filter((item) => item.productId !== productId);
+    localStorage.setItem('cartItems', JSON.stringify(updatedCartItems));
+    setCartItems(updatedCartItems);
+  };
+
   const onConfirmOrder = (values) => {
     console.log({ values });
     setCartDrawerOpen(false);
     setCheckoutDrawerOpen(false);
-    message.success('Your order has been placed successfully.');
+    message.success('Đặt hàng thành công, mời bạn tiếp tục Shopping');
+    localStorage.removeItem('cartItems');
+    setCartItems([]);
   };
 
   return (
@@ -145,6 +186,8 @@ function AppCart() {
         onClick={() => {
           setCartDrawerOpen(true);
         }}
+        count={productNumber}
+        offset={[-70, 1]}
         className={cx('soppingCartIcon')}
       >
         <FontAwesomeIcon className={cx('icon-Cart')} icon={faCartShopping} />
@@ -171,14 +214,14 @@ function AppCart() {
               title: 'Giá',
               dataIndex: 'price',
               render: (value) => {
-                return (
+                return value ? (
                   <span>
                     {`${value.toLocaleString('vi-VN', {
                       currency: 'VND',
                     })}`}
                     đ
                   </span>
-                );
+                ) : null;
               },
             },
             {
@@ -186,17 +229,27 @@ function AppCart() {
               dataIndex: 'quantity',
             },
             {
+              title: 'Xóa sản phẩm',
+              dataIndex: 'productId',
+              render: (productId) => (
+                <Button type="danger" onClick={() => handleDeleteCartItem(productId)}>
+                  Xóa
+                </Button>
+              ),
+            },
+            {
               title: 'Tổng',
               dataIndex: 'total',
               render: (value) => {
-                return (
+                console.log(value);
+                return value ? (
                   <span>
                     {`${value.toLocaleString('vi-VN', {
                       currency: 'VND',
                     })}`}
                     đ
                   </span>
-                );
+                ) : null;
               },
             },
           ]}
@@ -206,7 +259,7 @@ function AppCart() {
             }, 0);
             return (
               <span>
-                Tổng thiệt hại:{'  '}
+                Tổng :{'  '}
                 {`${total.toLocaleString('vi-VN', {
                   currency: 'VND',
                 })}`}
@@ -216,10 +269,12 @@ function AppCart() {
           }}
         />
         <Button
+          className=""
           onClick={() => {
             setCheckoutDrawerOpen(true);
           }}
           type="primary"
+          danger
         >
           Thanh toán
         </Button>
@@ -229,55 +284,67 @@ function AppCart() {
         onClose={() => {
           setCheckoutDrawerOpen(false);
         }}
-        title="Confirm Order"
+        title="Đặt hàng"
       >
         <Form onFinish={onConfirmOrder}>
           <Form.Item
             rules={[
               {
                 required: true,
-                message: 'Please enter your full name',
+                message: 'Nhập tên người nhận hàng',
               },
             ]}
-            label="Full Name"
+            label="Họ và tên"
             name="full_name"
           >
-            <Input placeholder="Enter your full name.." />
+            <Input placeholder="Họ và tên" />
           </Form.Item>
           <Form.Item
             rules={[
               {
                 required: true,
                 type: 'email',
-                message: 'Please enter a valid email',
+                message: 'Nhập email',
               },
             ]}
             label="Email"
             name="your_name"
           >
-            <Input placeholder="Enter your email.." />
+            <Input placeholder="Nhập email của bạn" />
           </Form.Item>
           <Form.Item
             rules={[
               {
                 required: true,
-                message: 'Please enter your address',
+                message: 'Nhập số điện thoại ',
               },
             ]}
-            label="Address"
+            label="Số điện thoại"
+            name="your_number"
+          >
+            <Input placeholder="Nhập số điện thoại" />
+          </Form.Item>
+          <Form.Item
+            rules={[
+              {
+                required: true,
+                message: 'Nhập địa chỉ nhận hàng',
+              },
+            ]}
+            label="Địa chỉ"
             name="your_address"
           >
-            <Input placeholder="Enter your full address.." />
+            <Input placeholder="Nhập địa chỉ nhận hàng" />
           </Form.Item>
           <Form.Item>
             <Checkbox defaultChecked disabled>
-              Cash on Delivery
+              Thanh toán khi nhận hàng
             </Checkbox>
           </Form.Item>
-          <Typography.Paragraph type="secondary">More methods coming soon</Typography.Paragraph>
-          <Button type="primary" htmlType="submit">
+          <Typography.Paragraph type="secondary">Nhớ xem kỹ lại thông tin trước khi đặt hàng nhé</Typography.Paragraph>
+          <Button type="primary" danger htmlType="submit">
             {' '}
-            Confirm Order
+            Đặt hàng
           </Button>
         </Form>
       </Drawer>

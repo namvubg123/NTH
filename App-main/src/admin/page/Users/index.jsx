@@ -1,9 +1,9 @@
 import { DeleteOutlined, EditOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
-import { Button, Input, Popconfirm, Space, Table, Tooltip } from 'antd';
+import { Button, Input, Popconfirm, Space, Table, Tooltip, message, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import ModalUser from './components/ModalUser';
-import { getAllUsers } from '../../../components/api/users';
+import { deleteUser, getAllUsers } from '../../../components/api/users';
 
 function AdminUsers(props) {
   const [openForm, setOpenForm] = useState(false);
@@ -74,7 +74,7 @@ function AdminUsers(props) {
               icon={<DeleteOutlined />}
               okText="Xóa"
               okType="danger"
-              onConfirm={() => handleConfirmDeleteProduct(record.id)}
+              onConfirm={() => handleConfirmDeleteProduct(record._id)}
             >
               <Button className="flex justify-center items-center text-md shadow-md" icon={<DeleteOutlined />}></Button>
             </Popconfirm>
@@ -92,7 +92,20 @@ function AdminUsers(props) {
       ),
     },
   ];
-  const handleConfirmDeleteProduct = (id) => {};
+  const handleConfirmDeleteProduct = (id) => {
+    console.log(id);
+    deleteUser(id).then((res) => {
+      console.log('thanh cong ');
+      getAllUsers()
+        .then((response) => {
+          setDataSource(response.data);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      notification.success({ message: 'Xoa thanh cong nguoi dung' });
+    });
+  };
   return (
     <div>
       <div className="flex justify-between items-center mb-3 relative">

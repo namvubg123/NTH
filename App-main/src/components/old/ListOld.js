@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { LoadingOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Badge, Card, Rate, Spin } from 'antd';
-import Meta from 'antd/es/card/Meta';
+import { message, notification } from 'antd';
 import { getProducts } from '../api/products';
 import { Link, useNavigate } from 'react-router-dom';
 
@@ -10,6 +8,34 @@ function ListOld() {
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState('Điện thoại cũ');
   const Navigate = useNavigate();
+
+  const handleAddToCart = (productId) => {
+    const obj = {
+      productId: productId,
+      quantity: 1,
+    };
+    let itemReqList = localStorage.getItem('cartItems');
+    if (itemReqList) {
+      const arr = JSON.parse(itemReqList);
+      console.log(arr);
+      const existingItem = arr.find((item) => item.productId === obj.productId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+      } else {
+        arr.push(obj);
+        notification.success({ message: arr });
+      }
+      localStorage.setItem('cartItems', JSON.stringify(arr));
+
+      message.success('Thêm vào giỏ hàng thành công!');
+    } else {
+      localStorage.setItem('cartItems', JSON.stringify([obj]));
+
+      message.success('Thêm vào giỏ hàng thành công!');
+    }
+    window.location.reload();
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -82,9 +108,14 @@ function ListOld() {
                   </p>
                 </div>
                 <div className="mt-[20px]">
-                  <Link to="/payment">
-                    <p className="text-center bg-red-600 w-full h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105">
-                      Mua ngay
+                  <Link>
+                    <p
+                      className="text-center bg-red-600 w-full h-[40px] text-white py-[6px] rounded-md cursor-pointer hover:scale-105"
+                      onClick={() => {
+                        handleAddToCart(products._id);
+                      }}
+                    >
+                      Thêm vào giỏ hàng
                     </p>
                   </Link>
                 </div>
