@@ -1,6 +1,6 @@
 import React from 'react';
 import { ModalForm, ProForm, ProFormText } from '@ant-design/pro-components';
-import { registerUser } from './../../../../components/api/auth';
+import { registerUser } from '../../../../components/api/auth';
 import { notification } from 'antd';
 
 function ModalUser({ dataUser, openForm, onChangeClickOpen }) {

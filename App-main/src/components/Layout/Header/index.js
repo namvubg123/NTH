@@ -63,9 +63,11 @@ function Header() {
             <Link to="/">
               <img src={logo} alt="" className={cx('img-logo')} />
             </Link>
-            <div className={cx('text')}>
-              <h3>NTH MOBILE</h3>
-            </div>
+            <Link to="/">
+              <div className={cx('text')}>
+                <h3>NTH MOBILE</h3>
+              </div>
+            </Link>
           </div>
           <div className={cx('nav')}>
             <div className={cx('search')}>
@@ -177,6 +179,14 @@ function AppCart() {
     setCartItems(updatedCartItems);
   };
 
+  const handleConfirmOrder = () => {
+    if (cartItems.length === 0) {
+      message.warning('Không có sản phẩm nào trong giỏ hàng');
+    } else {
+      setCheckoutDrawerOpen(true);
+    }
+  };
+
   const onConfirmOrder = (values) => {
     console.log({ values });
     setCartDrawerOpen(false);
@@ -274,14 +284,7 @@ function AppCart() {
             );
           }}
         />
-        <Button
-          className=""
-          onClick={() => {
-            setCheckoutDrawerOpen(true);
-          }}
-          type="primary"
-          danger
-        >
+        <Button className="" onClick={handleConfirmOrder} type="primary" danger>
           Thanh toán
         </Button>
       </Drawer>
@@ -314,7 +317,7 @@ function AppCart() {
               },
             ]}
             label="Email"
-            name="your_name"
+            name="customer_email"
           >
             <Input placeholder="Nhập email của bạn" />
           </Form.Item>
@@ -326,7 +329,7 @@ function AppCart() {
               },
             ]}
             label="Số điện thoại"
-            name="your_number"
+            name="customer_phone"
           >
             <Input placeholder="Nhập số điện thoại" />
           </Form.Item>
@@ -338,7 +341,7 @@ function AppCart() {
               },
             ]}
             label="Địa chỉ"
-            name="your_address"
+            name="customer_address"
           >
             <Input placeholder="Nhập địa chỉ nhận hàng" />
           </Form.Item>
