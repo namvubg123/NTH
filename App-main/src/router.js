@@ -12,7 +12,7 @@ import PayForm from './components/pay/PayForm';
 import ProductsDetails from './components/productDetails/Products';
 import Account from './components/user/userPage/Account';
 import CustomerSupport from './components/user/userPage/CustomerSupport';
-import PurchaseHistory from './components/user/userPage/PurchaseHistory';
+// import PurchaseHistory from './components/user/userPage/PurchaseHistory';
 import Offer from './components/user/userPage/Offer';
 import User from './components/user/User';
 import DefaultLayoutAdmin from './admin/components/DefaultLayoutAdmin';
@@ -59,23 +59,23 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: 'account',
+        path: 'account/:id',
         element: <Account />,
       },
       {
         path: 'support',
         element: <CustomerSupport />,
       },
-      {
-        path: 'history',
-        element: <PurchaseHistory />,
-      },
+      // {
+      //   path: 'history/:id',
+      //   element: <PurchaseHistory />,
+      // },
       {
         path: 'offer',
         element: <Offer />,
       },
       {
-        path: 'user',
+        path: 'user/:id',
         element: <User />,
       },
       {
@@ -122,9 +122,6 @@ export const router = createBrowserRouter([
         element: <AdminCategory />,
       },
     ],
-  },
-  {
-    path: '/auth/admin',
   },
   {
     path: '/payment',

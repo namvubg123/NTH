@@ -6,3 +6,6 @@ export const getAllUsers = () => {
 export const deleteUser = (id) => {
   return axios.delete(`/admin/user/${id}`);
 };
+export const updateUser = (id, userInfo) => {
+  return axios.put(`/user/update/${id}`, userInfo);
+};

@@ -1,14 +1,13 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button, Form, Input, Typography, message } from 'antd';
+import { Button, Checkbox, Form, Input, Typography, message } from 'antd';
 
 function PayForm() {
-  const Navigate = useNavigate;
+  const navigate = useNavigate();
   const onConfirmOrder = (values) => {
-    console.log({ values });
+    navigate('/');
     message.success('Đặt hàng thành công, mời bạn tiếp tục Shopping');
     localStorage.removeItem('cartItems');
-    Navigate('/');
   };
 
   return (
@@ -16,7 +15,7 @@ function PayForm() {
       <h2 className="text-center uppercase text-[20px] font-semibold text-red-600">Thông tin đặt hàng</h2>
       <div className="w-1/2 mx-auto mt-7 border-2 border-gray-300 rounded-lg p-[20px] my-[20px]">
         <h3 className="font-medium">Thông tin khách hàng</h3>
-        <Form onFinish={onConfirmOrder}>
+        <Form onFinish={onConfirmOrder} autoComplete="off">
           <Form.Item
             rules={[
               {
@@ -74,28 +73,21 @@ function PayForm() {
               placeholder="Nhập địa chỉ nhận hàng"
             />
           </Form.Item>
+          <div>
+            <p className="font-medium">Phương thức thanh toán</p>
+            <Checkbox>Thanh toán khi nhận hàng</Checkbox>
+          </div>
+          <Typography.Paragraph type="secondary">Nhớ xem kỹ lại thông tin trước khi đặt hàng nhé</Typography.Paragraph>
+          <Form.Item
+            wrapperCol={{
+              offset: 4,
+            }}
+          >
+            <Button className="w-512px h-40px px-60" type="primary" danger htmlType="submit">
+              Đặt hàng
+            </Button>
+          </Form.Item>
         </Form>
-        <div>
-          <p className="font-medium">Phương thức thanh toán</p>
-          <li className="cursor-pointer">Thanh toán khi giao hàng(COD)</li>
-        </div>
-        <Typography.Paragraph type="secondary">Nhớ xem kỹ lại thông tin trước khi đặt hàng nhé</Typography.Paragraph>
-      </div>
-      <div className="w-1/2 mx-auto mb-[30px]">
-        {/* <Link>
-          <p className="text-center bg-red-600 py-5 text-white rounded-lg uppercase font-bold tracking-wider cursor-pointer">
-            Đặt hàng
-          </p>
-        </Link> */}
-        <Button
-          className="text-center bg-red-600 py-5 text-white rounded-lg uppercase font-bold tracking-wider cursor-pointer"
-          type="primary"
-          danger
-          htmlType="submit"
-        >
-          {' '}
-          Đặt hàng
-        </Button>
       </div>
     </div>
   );

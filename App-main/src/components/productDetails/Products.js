@@ -99,7 +99,12 @@ function ProductsDetails() {
           </div>
         </div>
         <div>
-          <h3 className="text-[24px] text-red-600 font-semibold">{product.price} VND</h3>
+          <h3 className="text-[24px] text-red-600 font-semibold">
+            {product.price &&
+              ` ${product.price.toLocaleString('vi-VN', {
+                currency: 'VND',
+              })} VND`}
+          </h3>
           <div className="border-2 border-gray-200 rounded-xl py-2 px-5 my-5">
             <p className="font-semibold mb-3">Thông số kỹ thuật</p>
             <div className="col-span-2 h-[300px] overflow-scroll font-medium">

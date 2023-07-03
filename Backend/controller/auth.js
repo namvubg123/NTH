@@ -10,7 +10,7 @@ const auth = {
       const salt = await bcrypt.genSalt(10);
       const hashed = await bcrypt.hash(req.body.password, salt);
       console.log(req.body);
-      //Create new user
+
       const newUser = new User({
         username: req.body.username,
         email: req.body.email,
@@ -18,8 +18,9 @@ const auth = {
         phone: req.body.phone,
         password: hashed,
         lastName: req.body.lastName,
+        isAdmin: req.body.isAdmin,
       });
-      //Save new user
+
       const user = await newUser.save();
       res.status(200).json(user);
     } catch (err) {

@@ -20,12 +20,9 @@ function LoginForm(props) {
     loginUser(values).then((res) => {
       if (res.status === 200) {
         Cookies.set('token', res.data.token);
-
         setUser(res.data);
-
         if (res.data.isAdmin === true) {
           notification.success({ message: 'Đăng nhập thành công' });
-
           navigate(`/admin`);
         } else {
           sessionStorage.setItem('User', JSON.stringify(res.data));
@@ -44,7 +41,7 @@ function LoginForm(props) {
       <div className="border-2 border-gray-300 rounded-sm p-3 my-[20px] hover:border-red-300 hover:shadow-lg">
         <input
           name="useName"
-          placeholder="Nhập username"
+          placeholder="Nhập tên người dùng"
           className="outline-none"
           value={username}
           onChange={(e) => setUserName(e.target.value)}

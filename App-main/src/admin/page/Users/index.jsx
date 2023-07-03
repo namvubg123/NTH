@@ -1,5 +1,5 @@
-import { DeleteOutlined, EditOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
-import { Button, Input, Popconfirm, Space, Table, Tooltip, message, notification } from 'antd';
+import { DeleteOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import { Button, Input, Popconfirm, Space, Table, Tooltip, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import ModalUser from './components/ModalUser';
@@ -58,16 +58,6 @@ function AdminUsers(props) {
       align: 'center',
       render: (e, record, index) => (
         <Space size={10} key={index}>
-          <Tooltip title="Chỉnh sửa">
-            <Button
-              className="flex justify-center items-center text-md shadow-md"
-              icon={<EditOutlined />}
-              onClick={() => {
-                setDataUser(record);
-                setOpenForm(true);
-              }}
-            ></Button>
-          </Tooltip>
           <Tooltip title="Xóa">
             <Popconfirm
               title="Bạn có chắc chắn muốn xóa người dùng này ?"
@@ -79,15 +69,6 @@ function AdminUsers(props) {
               <Button className="flex justify-center items-center text-md shadow-md" icon={<DeleteOutlined />}></Button>
             </Popconfirm>
           </Tooltip>
-          {/* <Tooltip title="Xem chi tiết">
-            <Button
-              className="flex justify-center items-center text-md shadow-md"
-              icon={<SolutionOutlined />}
-              onClick={() => {
-                setDataUser(record);
-              }}
-            ></Button>
-          </Tooltip> */}
         </Space>
       ),
     },
@@ -103,7 +84,7 @@ function AdminUsers(props) {
         .catch((error) => {
           console.log(error);
         });
-      notification.success({ message: 'Xoa thanh cong nguoi dung' });
+      notification.success({ message: 'Xóa thành công' });
     });
   };
   return (

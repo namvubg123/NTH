@@ -9,6 +9,6 @@ export const loginUser = (value) => {
   return res;
 };
 
-export const requestRefreshToken = (refreshToken) => {
-  return axios.post(`/refresh`, refreshToken);
-};
+// export const requestRefreshToken = (refreshToken) => {
+//   return axios.post(`/refresh`, refreshToken);
+// };

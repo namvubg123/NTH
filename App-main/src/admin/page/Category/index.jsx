@@ -1,15 +1,15 @@
-import { DownOutlined, FilterOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
-import { Button, Input, Popover, Space, Tooltip, Tree } from 'antd';
+import { DownOutlined, UserAddOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Button, Popconfirm, Space, Tooltip, Tree, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import ModalCategory from './components/ModalCategory';
-import FormFilter from './components/FormFilter';
-import { getCategory } from '../../../components/api/category';
+
+import { deleteCategories, getCategory } from '../../../components/api/category';
 
 function AdminCategory(props) {
   const [openForm, setOpenForm] = useState(false);
   const [Category, setCategory] = useState({});
-  const [valueSearchCategory, setValueSearchCategory] = useState('');
+
   const [dataSource, setDataSource] = useState([]);
 
   useEffect(() => {
@@ -26,7 +26,21 @@ function AdminCategory(props) {
   const treeData = (dataSource) => {
     return dataSource.map((category) => {
       return {
-        title: `${category.name} (${category._id})`,
+        title: (
+          <Space>
+            <Tooltip title="Xóa">
+              <Popconfirm
+                title="Bạn có chắc chắn muốn xóa danh mục này?"
+                okText="Xóa"
+                cancelText="Hủy"
+                onConfirm={() => handleDeleteCategory(category._id)}
+              >
+                <Button icon={<DeleteOutlined />} className="flex justify-center items-center text-md shadow-md" />
+              </Popconfirm>
+            </Tooltip>
+            <span>{`${category.name} (${category._id})`}</span>
+          </Space>
+        ),
         key: category._id,
         children: category.children && category.children.length > 0 ? treeData(category.children) : [],
       };
@@ -34,28 +48,30 @@ function AdminCategory(props) {
   };
 
   // const handleConfirmDeleteCategory = (id) => {};
+  const handleDeleteCategory = (id) => {
+    console.log(id);
+    deleteCategories(id)
+      .then((res) => {
+        console.log('thanh cong ');
+        getCategory()
+          .then((response) => {
+            const data = response.data?.categoryList;
+            setDataSource(Array.isArray(data) ? data : [data]);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        notification.success({ message: 'Xóa thành công' });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <div>
       <div className="flex justify-between items-center mb-3 relative ">
-        <Space className="ml-5">
-          <Tooltip title="Tìm kiếm danh mục">
-            <Input
-              prefix={<SearchOutlined className="opacity-60 mr-1" />}
-              placeholder="Nhập mã danh mục"
-              className="shadow-sm w-[250px]"
-              onChange={(e) => {
-                setValueSearchCategory(e.target.value);
-              }}
-              value={valueSearchCategory}
-            />
-          </Tooltip>
-          <Popover trigger={'click'} content={<FormFilter />}>
-            <Button icon={<FilterOutlined />} className="flex justify-center items-center">
-              Lọc
-            </Button>
-          </Popover>
-        </Space>
+        <Space className="ml-5"></Space>
         <Title level={3} style={{ textTransform: 'uppercase', marginBottom: 0 }}>
           Danh sách danh mục
         </Title>
@@ -66,15 +82,6 @@ function AdminCategory(props) {
             className="flex justify-center items-center text-md font-medium shadow-md bg-slate-100"
           >
             Thêm danh mục
-          </Button>
-        </Space>
-        <Space size={8}>
-          <Button
-            icon={<UserAddOutlined />}
-            onClick={() => setOpenForm(true)}
-            className="flex justify-center items-center text-md font-medium shadow-md bg-slate-100"
-          >
-            Sửa danh mục
           </Button>
         </Space>
       </div>

@@ -8,11 +8,11 @@ function ModalUser({ dataUser, openForm, onChangeClickOpen }) {
     <div>
       <ModalForm
         width={750}
-        title={dataUser?.id ? 'Sửa thông tin người dùng' : 'Thêm người dùng'}
+        title={dataUser?._id ? 'Sửa thông tin người dùng' : 'Thêm người dùng'}
         initialValues={dataUser}
         modalProps={{
           destroyOnClose: true,
-          okText: dataUser?.id ? 'Cập nhật' : 'Tạo mới',
+          okText: dataUser?._id ? 'Cập nhật' : 'Tạo mới',
           okType: 'primary',
           cancelText: 'Hủy',
         }}

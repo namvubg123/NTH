@@ -12,22 +12,22 @@ function User() {
     {
       id: 1,
       title: 'TUẦN LỄ SALE NÓNG - MUA NGAY',
-      image: './images/slider_user/slide1.png',
+      image: '../images/slider_user/slide1.png',
     },
     {
       id: 2,
       title: 'XIAOMI REDMI NOTE 12 - MỞ BÁN DEAL HỜI ',
-      image: './images/slider_user/slide2.png',
+      image: '../images/slider_user/slide2.png',
     },
     {
       id: 3,
       title: 'SONY WF-C700 - GIÁ TỐT',
-      image: './images/slider_user/slide3.png',
+      image: '../images/slider_user/slide3.png',
     },
     {
       id: 4,
       title: 'POCO X5 - CHỈ TỪ 5.45 TRIỆU',
-      image: './images/slider_user/slide4.png',
+      image: '../images/slider_user/slide4.png',
     },
   ];
 
@@ -48,7 +48,7 @@ function User() {
           {/* <a href="https://www.flaticon.com/free-icons/welcome" title="welcome icons"></a> */}
           <CgHello />
         </div>
-        <h3 className="text-[30px]">Chào mừng {SetUserName ? SetUserName.username : ''}</h3>
+        <h3 className="text-[27px]">Chào mừng {SetUserName ? SetUserName.lastName : ''}</h3>
       </div>
       <div>
         <div className="text-center">

@@ -1,7 +1,5 @@
 const productRepository = require("../common-middleware/ProductRepo");
 const Product = require("../model/product.js");
-const Multer = require("multer");
-const shortid = require("shortid");
 
 exports.getProducts = async (req, res) => {
   try {

@@ -1,16 +1,9 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  FilterOutlined,
-  SearchOutlined,
-  SolutionOutlined,
-  UserAddOutlined,
-} from '@ant-design/icons';
-import { Button, Input, Popconfirm, Popover, Space, Table, Tooltip, notification } from 'antd';
+import { DeleteOutlined, SearchOutlined, UserAddOutlined } from '@ant-design/icons';
+import { Button, Input, Popconfirm, Space, Table, Tooltip, notification } from 'antd';
 import Title from 'antd/es/typography/Title';
 import React, { useEffect, useState } from 'react';
 import ModalProduct from './components/ModalProduct';
-import FormFilter from './components/FormFilter';
+
 import { getProducts, removeProduct } from '../../../components/api/products';
 
 function AdminProducts(props) {
@@ -78,16 +71,6 @@ function AdminProducts(props) {
       align: 'center',
       render: (e, record, index) => (
         <Space size={10} key={index}>
-          <Tooltip title="Chỉnh sửa">
-            <Button
-              className="flex justify-center items-center text-md shadow-md"
-              icon={<EditOutlined />}
-              onClick={() => {
-                setDataProduct(record);
-                setOpenForm(true);
-              }}
-            ></Button>
-          </Tooltip>
           <Tooltip title="Xóa">
             <Popconfirm
               title="Bạn có chắc chắn muốn xóa sản phẩm này ?"
@@ -98,15 +81,6 @@ function AdminProducts(props) {
             >
               <Button className="flex justify-center items-center text-md shadow-md" icon={<DeleteOutlined />}></Button>
             </Popconfirm>
-          </Tooltip>
-          <Tooltip title="Xem chi tiết">
-            <Button
-              className="flex justify-center items-center text-md shadow-md"
-              icon={<SolutionOutlined />}
-              onClick={() => {
-                setDataProduct(record);
-              }}
-            ></Button>
           </Tooltip>
         </Space>
       ),
@@ -125,7 +99,7 @@ function AdminProducts(props) {
           .catch((error) => {
             console.log(error);
           });
-        notification.success({ message: ' Xoa thanh cong san pham ' });
+        notification.success({ message: ' Xóa thành công ' });
       }
     });
   };
@@ -136,7 +110,7 @@ function AdminProducts(props) {
           <Tooltip title="Tìm kiếm sản phẩm">
             <Input
               prefix={<SearchOutlined className="opacity-60 mr-1" />}
-              placeholder="Nhập mã mã sản phẩm"
+              placeholder="Nhập tên sản phẩm"
               className="shadow-sm w-[250px]"
               onChange={(e) => {
                 setValueSearchProduct(e.target.value);
@@ -144,11 +118,6 @@ function AdminProducts(props) {
               value={valueSearchProduct}
             />
           </Tooltip>
-          <Popover trigger={'click'} content={<FormFilter />}>
-            <Button icon={<FilterOutlined />} className="flex justify-center items-center">
-              Lọc
-            </Button>
-          </Popover>
         </Space>
         <Title level={3} style={{ textTransform: 'uppercase', marginBottom: 0 }}>
           Danh sách sản phẩm

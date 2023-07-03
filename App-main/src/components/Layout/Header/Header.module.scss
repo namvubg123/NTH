@@ -53,17 +53,29 @@
                     }
                     input {
                         padding: 12px 90px 12px 36px;
-                        border-radius: 4px;
+                        // border-radius: 4px;
                         width: 100%;
+                        border-top-left-radius: 4px;
+                        border-top-right-radius: 4px;
+
                     }
                     
                 }
-                .products{
-                    background-color: white;
+                .products {
+                    background-color: #ffffff;
                     position: absolute;
-                    
-                    
-                }
+                    z-index: 4;
+                    border-radius: 2%;
+                    border: #efe8e8 1px solid;
+                    li {
+                      padding: 12px 90px 12px 36px;
+                      position: relative;
+                      z-index: 5;
+                      &:hover {
+                        background-color: #fafafa;
+                      }
+                    }
+                  }
                 
                 .nav-menu 
                 {
@@ -118,6 +130,7 @@
     
 }
 .soppingCartIcon{
+    z-index: 3;
     display: flex;
     align-items: center;
     padding: 5px 20px 0px 6px;

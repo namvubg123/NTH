@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../api/auth';
 import { notification } from 'antd';
 
@@ -7,6 +7,7 @@ function RegisterForm() {
   const [username, setUserName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate();
   const valueRegister = {
     username,
     email,
@@ -18,7 +19,7 @@ function RegisterForm() {
       (res) => {
         console.log(res);
         notification.success({ message: ' Đăng kí thành công ' });
-        Navigate(`/login`);
+        navigate(`/login`);
       },
       (err) => {
         console.log(err);
@@ -34,7 +35,7 @@ function RegisterForm() {
       <div className="border-2 border-gray-300 rounded-sm p-3 my-[20px] hover:border-red-300 hover:shadow-lg">
         <input
           name="useName"
-          placeholder="Nhập username"
+          placeholder="Nhập tên người dùng"
           className="outline-none"
           value={username}
           onChange={(e) => setUserName(e.target.value)}

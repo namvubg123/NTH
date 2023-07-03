@@ -16,5 +16,11 @@ router.delete(
   middlewareController.verifyTokenAndAdminAuth,
   userController.deleteUser
 );
+//Update User
+router.put(
+  "/user/update/:id",
+  middlewareController.verifyToken,
+  userController.updateUser
+);
 
 module.exports = router;

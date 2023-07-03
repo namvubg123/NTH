@@ -6,6 +6,8 @@ import { Button } from 'antd';
 
 function UserCommon() {
   const { setUser } = useContext(GlobalContext);
+  const UserName = sessionStorage.getItem('User');
+  const SetUserName = JSON.parse(UserName);
 
   const handleLogout = () => {
     Cookies.remove('token');
@@ -18,7 +20,7 @@ function UserCommon() {
     <div>
       <Link
         className="grid grid-cols-[30px_minmax(200px,_1fr)] w-3/4 mx-12 p-3 border-2 border-white hover:border-2 hover:border-red-600 hover:rounded-xl"
-        to="/user"
+        to="/"
       >
         <div className="pr-4">
           <i className="fa-solid fa-house-user"></i>
@@ -27,7 +29,7 @@ function UserCommon() {
       </Link>
       <Link
         className="grid grid-cols-[30px_minmax(200px,_1fr)] w-3/4 mx-12 p-3 border-2 border-white hover:border-2 hover:border-red-600 hover:rounded-xl"
-        to="/account"
+        to={`/account/${SetUserName?._id}`}
       >
         <div>
           <i className="fa-solid fa-user"></i>
@@ -43,15 +45,15 @@ function UserCommon() {
         </div>
         <h3 className="font-medium">Ưu đãi</h3>
       </Link>
-      <Link
+      {/* <Link
         className="grid grid-cols-[30px_minmax(200px,_1fr)] w-3/4 mx-12 p-3 border-2 border-white hover:border-2 hover:border-red-600 hover:rounded-xl"
-        to="/history"
+        to={`/history/${SetUserName?._id}`}
       >
         <div>
           <i className="fa-solid fa-clipboard-list"></i>
         </div>
         <h3 className="font-medium">Lịch sử mua hàng</h3>
-      </Link>
+      </Link> */}
       <Link
         className="grid grid-cols-[30px_minmax(200px,_1fr)] w-3/4 mx-12 p-3 border-2 border-white hover:border-2 hover:border-red-600 hover:rounded-xl"
         to="/support"

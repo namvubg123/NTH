@@ -1,5 +1,6 @@
 import { BellOutlined, PoweroffOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Button, Layout, Menu, Space, Tooltip, Typography } from 'antd';
+import Cookies from 'js-cookie';
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 
@@ -16,6 +17,11 @@ function DefaultLayoutAdmin() {
     } else if (pathname.includes('/admin/category')) {
       return '3';
     }
+  };
+  const handleLogout = () => {
+    Cookies.remove('token');
+    sessionStorage.removeItem('User');
+    localStorage.removeItem('cartItems');
   };
   const items = [
     {
@@ -41,59 +47,62 @@ function DefaultLayoutAdmin() {
     },
   ];
   return (
-    <div className="">
-      <Layout className="h-[100vh]">
-        <Sider width={230}>
-          <div className="py-3 px-6 flex justify-center items-center border-b-2 border-stone-50">
-            <Title style={{ color: '#fff', marginBottom: 0, width: 150 }} level={4}>
-              Xin chào admin
-            </Title>
-          </div>
-          <Menu
-            className="rounded-md mt-1"
-            theme="dark"
-            mode="inline"
-            items={items}
-            defaultSelectedKeys={[check(pathname)]}
-          />
-        </Sider>
-        <Layout className="site-layout ml-2">
-          <Header theme="dark" className="rounded-md flex justify-between items-center p-8 ">
-            <Title style={{ color: '#fff', marginBottom: 0, textTransform: 'uppercase' }} level={2}>
-              NTH MOBILE
-            </Title>
-            <Space size={24}>
-              <Badge count={10} size="small">
-                <Button
-                  shape="circle"
-                  className="flex justify-center items-center text-white border-none text-[15px]"
-                  icon={<BellOutlined />}
-                ></Button>
-              </Badge>
-              <Avatar
-                className="flex justify-center items-center bg-white cursor-pointer"
+    <Layout
+      className="min-h-full"
+      style={{
+        minHeight: 700,
+        maxHeight: 1700,
+      }}
+    >
+      <Sider width={230}>
+        <div className="py-3 px-6 flex justify-center items-center border-b-2 border-stone-50">
+          <Title style={{ color: '#fff', marginBottom: 0, width: 150 }} level={4}>
+            Xin chào admin
+          </Title>
+        </div>
+        <Menu
+          className="min-h-full rounded-md mt-1"
+          theme="dark"
+          mode="inline"
+          items={items}
+          defaultSelectedKeys={[check(pathname)]}
+        />
+      </Sider>
+      <Layout className="site-layout ml-2">
+        <Header theme="dark" className="rounded-md flex justify-between items-center p-8 ">
+          <Title style={{ color: '#fff', marginBottom: 0, textTransform: 'uppercase' }} level={2}>
+            NTH MOBILE
+          </Title>
+          <Space size={24}>
+            <Badge count={10} size="small">
+              <Button
                 shape="circle"
-                size={40}
-                icon={<UserOutlined className="text-[20px] text-black" />}
-              />
-              <Tooltip title="Đăng xuất">
-                <Button
-                  className="flex justify-center items-center text-white text-xl border-none"
-                  shape="circle"
-                  icon={<PoweroffOutlined className="text-[15px]" />}
-                  onClick={() => {
-                    navigate('/user');
-                  }}
-                ></Button>
-              </Tooltip>
-            </Space>
-          </Header>
-          <Content className="mt-2 p-6 pb-0 h-[280px] bg-slate-200 rounded-md overflow-y-auto ">
-            <Outlet />
-          </Content>
-        </Layout>
+                className="flex justify-center items-center text-white border-none text-[15px]"
+                icon={<BellOutlined />}
+              ></Button>
+            </Badge>
+            <Avatar
+              className="flex justify-center items-center bg-white cursor-pointer"
+              shape="circle"
+              size={40}
+              icon={<UserOutlined className="text-[20px] text-black" />}
+            />
+            <Tooltip title="Đăng xuất">
+              <Button
+                className="flex justify-center items-center text-white text-xl border-none"
+                shape="circle"
+                icon={<PoweroffOutlined className="text-[15px]" />}
+                href="/login"
+                onClick={handleLogout}
+              ></Button>
+            </Tooltip>
+          </Space>
+        </Header>
+        <Content className="mt-2 p-6 pb-0 h-[280px] bg-slate-200 rounded-md overflow-y-auto ">
+          <Outlet />
+        </Content>
       </Layout>
-    </div>
+    </Layout>
   );
 }
 

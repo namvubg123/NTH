@@ -8,7 +8,7 @@ import { message, notification } from 'antd';
 function ListLaptop() {
   const [products, setProducts] = useState([]);
   const Navigate = useNavigate();
-  const [category, setCategory] = useState('MAC');
+  const [category, setCategory] = useState('Laptop');
 
   const handleAddToCart = (productId) => {
     const obj = {

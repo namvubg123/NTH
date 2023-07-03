@@ -6,9 +6,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { message, notification } from 'antd';
 
 function ListPhone() {
-  // const [active, setActive] = useState(false)
   const [products, setProducts] = useState([]);
   const Navigate = useNavigate();
+  const [category, setCategory] = useState('Apple');
 
   const handleAddToCart = (productId) => {
     const obj = {
@@ -41,32 +41,45 @@ function ListPhone() {
   useEffect(() => {
     getProducts()
       .then((response) => {
-        setProducts(response.data.data.filter((product) => product.type === 'Điện thoại'));
+        setProducts(response.data.data.filter((product) => product.category.name === category));
       })
       .catch((error) => {
         console.log(error);
       });
-  }, []);
+  }, [category]);
+  const handleCategoryChange = (category) => {
+    setCategory(category);
+  };
 
   return (
     <div className="mb-[10vh]">
       <div>
         <div className="w-3/4 mx-auto flex my-[20px]">
           <div
-            className="flex mr-5 border-2 border-gray-200 rounded-lg pl-2 pr-2 pb-1 cursor-pointer hover:scale-110"
-            id="1"
+            className={`flex mr-5 border-2 border-gray-200 rounded-lg pl-2 pr-2 pb-1 cursor-pointer hover:scale-110"
+            id="1 ${category === 'Apple' ? 'border-gray-200' : ''}`}
+            onClick={() => handleCategoryChange('Apple')}
           >
             <div className="text-[18px] mt-[-2px]">
               <i class="fa-brands fa-apple"></i>
             </div>
             <p className="text-[18px] ml-1">Apple</p>
           </div>
-          <div id="2">
+          <div
+            id="2"
+            className={`${category === 'Samsung' ? 'border-gray-200' : ''}`}
+            onClick={() => handleCategoryChange('Samsung')}
+          >
             <p className="text-[18px] mr-5 border-2 border-gray-200 rounded-lg pl-2 pr-2 pb-1 text-blue-700 font-bold cursor-pointer hover:scale-110">
               SamSung
             </p>
           </div>
-          <div className="flex mr-5 border-2 border-gray-200 rounded-lg pl-2 pr-2 pb-1 cursor-pointer hover:scale-110">
+          <div
+            className={` flex mr-5 border-2 border-gray-200 rounded-lg pl-2 pr-2 pb-1 cursor-pointer hover:scale-110 ${
+              category === 'Xiaomi' ? 'border-gray-200' : ''
+            }`}
+            onClick={() => handleCategoryChange('Xiaomi')}
+          >
             <img
               src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/800px-Xiaomi_logo_%282021-%29.svg.png"
               alt=""
@@ -74,12 +87,18 @@ function ListPhone() {
             />
             <p className="text-[18px] ml-1 text-gray-500 font-medium tracking-wide">Xiaomi</p>
           </div>
-          <div>
+          <div
+            className={` ${category === 'Oppo' ? 'border-gray-200' : ''}`}
+            onClick={() => handleCategoryChange('Oppo')}
+          >
             <p className="text-[18px] mr-5 border-2 border-gray-200 rounded-lg pl-2 pr-2 pb-1 lowercase text-green-600 font-semibold cursor-pointer hover:scale-110">
               Oppo
             </p>
           </div>
-          <div>
+          <div
+            className={` ${category === 'Realme' ? 'border-gray-200' : ''}`}
+            onClick={() => handleCategoryChange('Realme')}
+          >
             <p className="text-[18px] mr-5 border-2 border-gray-200 rounded-lg pl-2 pr-2 pb-1 text-yellow-400 cursor-pointer hover:scale-110">
               realme
             </p>

@@ -30,12 +30,10 @@ function Header() {
 
   const handleSearchChange = (event) => {
     const searchTerm = event.target.value;
-    // Filter the products based on the search term
     const filteredProducts = products.filter((product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setSearchResults(filteredProducts);
-    // Show the product list if the search term is not empty
     setShowProducts(searchTerm !== '');
   };
 
@@ -71,15 +69,23 @@ function Header() {
           </div>
           <div className={cx('nav')}>
             <div className={cx('search')}>
-              <input type="text" placeholder="Search" className={cx('input-search')} onChange={handleSearchChange} />
+              <Input
+                type="text"
+                placeholder="Nhập từ khóa tìm kiếm"
+                className={cx('input-search')}
+                onChange={handleSearchChange}
+              />
+
               <button className={cx('btn-search')}>
                 <FontAwesomeIcon className={cx('icon-search')} icon={faSearch} />
               </button>
               {showProducts && (
                 <div className={cx('products')}>
                   <ul>
-                    {searchResults.slice(0, 4).map((product) => (
-                      <li key={product.id}>{product.name}</li>
+                    {searchResults.slice(0, 7).map((product) => (
+                      <Link to={`/${product._id}`} key={product._id}>
+                        <li>{product.name}</li>
+                      </Link>
                     ))}
                   </ul>
                 </div>
@@ -112,11 +118,11 @@ function Header() {
                 <p className={cx('title')}>Hàng cũ</p>
               </Link>
               <AppCart />
-              <Link to={isLoggedIn ? '/user' : '/login'} className={cx('menu')}>
+              <Link to={isLoggedIn ? `/user/${SetUserName?._id}` : '/login'} className={cx('menu')}>
                 <i className={cx('phone')}>
                   <FontAwesomeIcon icon={faUser} />
                 </i>
-                <p className={cx('title')}>{isLoggedIn && SetUserName ? SetUserName.username : 'Đăng nhập'}</p>
+                <p className={cx('title')}>{isLoggedIn && SetUserName ? SetUserName.lastName : 'Đăng nhập'}</p>
               </Link>
             </div>
           </div>
@@ -162,8 +168,8 @@ function AppCart() {
     };
     fetchProductData();
   }, []);
-  // const productNumber = cartItems.reduce((total, item) => total + item.quantity, 0);
   const productNumber = cartItems.length;
+  // const productNumber = cartItems.reduce((total, item) => total + item.quantity, 0);
 
   const handleDeleteCartItem = (productId) => {
     const updatedCartItems = cartItems.filter((item) => item.productId !== productId);

@@ -9,11 +9,9 @@ import Accessories from '../components/accessories/Accessories';
 import BannerFooter from '../components/banner/BannerFooter';
 import Old from '../components/old/Old';
 
-
 function Home() {
   return (
-    <div >
-
+    <di>
       <Slide />
       <BannerHeader />
       <Flash />
@@ -23,9 +21,7 @@ function Home() {
       <Accessories />
       <Old />
       <BannerFooter />
-      
-
-    </div>
+    </di>
   );
 }
 
